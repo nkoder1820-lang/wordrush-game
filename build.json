@@ -1,0 +1,52 @@
+﻿[
+  {
+    "id": "5b64b612-8895-4d3f-b4f6-189490350092",
+    "status": "FINISHED",
+    "platform": "ANDROID",
+    "artifacts": {
+      "buildUrl": "https://expo.dev/artifacts/eas/chyVaNdbtNHWKz6pvbV3eh.aab",
+      "applicationArchiveUrl": "https://expo.dev/artifacts/eas/chyVaNdbtNHWKz6pvbV3eh.aab"
+    },
+    "fingerprint": {
+      "id": "019d520c-9606-7b43-aa4b-14e54a1d4940",
+      "hash": "cd3f8e101e1daac47151ec85260891c2b7174372"
+    },
+    "initiatingActor": {
+      "id": "1637fff1-1c42-4ab5-8991-6cd52c67eb6f",
+      "displayName": "ai_one"
+    },
+    "logFiles": [
+      "https://job-logs.eascdn.net/production/5b64b612-8895-4d3f-b4f6-189490350092/1775198049992-7aa5f962-f6d3-48d3-9ab6-88188b0c3456.txt?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20260403%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20260403T065319Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=7ce058f383d863167183cf45ec2f970a74f3399eff69b51347ae38aa912d9efe1078dcbe868d4815db621fa674db262828e6d669ad3349518126a4ba387c7400b74abb79035245f1d73886ec149d293a1312fd424170de46badfc9769f5669cf8ed40958919fbc118c9a4bd4e3e2c8d4b5ed0b13e2b03d572679cb551ce87f311868e2d22c2d8776562b466adcda6ab1897f3399f6efa2ffc1bf63aaaa46c78db267c86b33dc072baa9755b44c8a2694a917f2c09fba54f87328fd34e22590ce2435225aff7f6a17a7a20b78e49b76851ba6b0505011a7558384318dddd85fd29b3e7d1dfe250c0f63d6dd987e75a88dbd657d46b00a08766c3e6326a84119df",
+      "https://job-logs.eascdn.net/production/5b64b612-8895-4d3f-b4f6-189490350092/1775198054056-3da4735b-2ce8-488f-bea5-ad52bbf10989.txt?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20260403%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20260403T065319Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=479abe5b880a22bd09c9d31c977d0608d62382a14c6d0ef80df3780dd3c2aaab02b009e5dedfbe618ad95009519e5de195f49d5130b7c2e41f2ee8d585d8e9854d59f4754e0e4aab00bba50c592f11653783ac2ff642de79ef29447b0545b902f34696f79b9de3b814f096bcb2bcca199d1788c5fcaf2c3ab99c5ab87fe72ac60bc7b75dd04997aec8881a5de9c827feadb85a1ae9fc9eb370b96a62ddc8d30503bee6ae68842d19ece19d0901b5b6c229cdbee1a58a074e1a2b067c8fb0cc3ca2204dbf4133cf3213668399374e332408837b7a8293d176aee3da444261d3d7e61b4dbf683f52d98e418fe38c0fdae37454e513810c0573769b764cc3a295fa",
+      "https://job-logs.eascdn.net/production/5b64b612-8895-4d3f-b4f6-189490350092/1775198054283-a2590e78-0273-48d6-ab8d-20e362904557.txt?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20260403%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20260403T065319Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=9426ce462067ad288002660d78603e382a793d6dc69352f92d0fe0389399f35e93088d8805a20d082b1041162ef12e33cdd1aa5e8ba84884bd348c23cab38cb7560690c56d6270347d8756de371944b7643523ad476828d6b8611620eeb10651026d245ebdb6a06d3d1419bfc35979d415331c12edba6fdef25cba068cbcde4c88d146751f8e5a43c0c9823c835c373f39da7a55f5e2281bd7651651bcc16a52cee9c347a2dd87b19da78c67ec3688ffca0b2e7f01aef1dc3160ac9ea89490143246a3926bf7a1f1a59ac5d156a7cbd22945c7055cdd6197daf813bb804fbead84195650aa6e1b9734b62a27e5323aee165e8864195939c541a78241035c373d",
+      "https://job-logs.eascdn.net/production/5b64b612-8895-4d3f-b4f6-189490350092/1775198054488-b2f086ab-f108-44ce-beef-177d7f1ec633.txt?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20260403%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20260403T065319Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=4b45b8b6296f2af0e8135c3ad29119dcdd894b14945ddf538604579e582ff53a79397a8dffdb865c61c08a472983cb4501dcaa380382f27c72f8ccc10c9c098a19a5c460b23f878be759a7f3123ed245cd4bc90adcaa78cd045f387770b47635dee30f2fa191d51238009d08c93cc1233294b422366470e6be30cb46a1bc938667ab85726a568fab7418e18a56e7340f0124bfb1e680a344ea23dcade0d07b356862eebf7d4a920a807ec5b9f8d23998a6b1b6610770ac3f0e9eb96fe7d39abdf48fc0cd2f4ef7e001ee1d2b1185da10e60590696786228a16abaa781a0477b0bda82e90825b94455ae86390e77033bd309f7f82fab747fe9ddb68eee5e65eea"
+    ],
+    "project": {
+      "id": "3fb70e67-b39d-4d6b-9017-d3f13daaa267",
+      "name": "wordrush",
+      "slug": "wordrush",
+      "ownerAccount": {
+        "id": "467b3f94-4f6c-470a-8a07-9f97da25f4b2",
+        "name": "ai_one"
+      }
+    },
+    "distribution": "STORE",
+    "buildProfile": "production",
+    "sdkVersion": "55.0.0",
+    "appVersion": "1.0.0",
+    "appBuildVersion": "1",
+    "gitCommitHash": "aa53ea2b6530f5cc3821db1786cd93e2e2eaebb7",
+    "gitCommitMessage": "Adding files to Github",
+    "priority": "NORMAL",
+    "createdAt": "2026-04-03T06:34:09.777Z",
+    "updatedAt": "2026-04-03T06:43:40.438Z",
+    "completedAt": "2026-04-03T06:43:28.333Z",
+    "expirationDate": "2026-05-03T06:34:09.791Z",
+    "isForIosSimulator": false,
+    "metrics": {
+      "buildWaitTime": 101,
+      "buildQueueTime": 46341,
+      "buildDuration": 511742
+    }
+  }
+]
