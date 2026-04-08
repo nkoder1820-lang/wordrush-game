@@ -2,12 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { theme } from '../theme';
-
-type RootStackParamList = {
-  Home: undefined;
-  Game: undefined;
-  Result: { score: number };
-};
+import { RootStackParamList } from '../types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
@@ -15,23 +10,36 @@ export default function HomeScreen({ navigation }: Props) {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={theme.colors.background} />
+
       <View style={styles.content}>
-        <Text style={styles.emoji}>⚡</Text>
-        <Text style={styles.title}>30 Sec Sprint</Text>
-        <Text style={styles.subtitle}>Beat others in 30 seconds</Text>
+        <Text style={styles.title}>WordRush</Text>
+        <Text style={styles.subtitle}>Test your English skills</Text>
         <View style={styles.divider} />
-        <Text style={styles.description}>
-          Unscramble words, fix spelling, fill vowels, and classify grammar — all in 30 seconds!
-        </Text>
       </View>
-      <TouchableOpacity
-        style={styles.startButton}
-        activeOpacity={0.8}
-        onPress={() => navigation.navigate('Game')}
-      >
-        <Text style={styles.startButtonText}>START</Text>
-      </TouchableOpacity>
-      <Text style={styles.footer}>WordRush</Text>
+
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity
+          style={[styles.modeButton, styles.sprintButton]}
+          activeOpacity={0.8}
+          onPress={() => navigation.navigate('SprintSetup')}
+        >
+          <Text style={styles.modeEmoji}>⚡</Text>
+          <Text style={styles.modeTitle}>Sprint Mode</Text>
+          <Text style={styles.modeDesc}>Race against the clock</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.modeButton, styles.scrollButton]}
+          activeOpacity={0.8}
+          onPress={() => navigation.navigate('Scroll')}
+        >
+          <Text style={styles.modeEmoji}>📱</Text>
+          <Text style={styles.modeTitle}>Scroll Mode</Text>
+          <Text style={styles.modeDesc}>Endless practice feed</Text>
+        </TouchableOpacity>
+      </View>
+
+      <Text style={styles.footer}>WordRush v2.0</Text>
     </View>
   );
 }
@@ -48,16 +56,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: theme.spacing.xxl,
   },
-  emoji: {
-    fontSize: 64,
-    marginBottom: theme.spacing.md,
-  },
   title: {
     fontSize: theme.fontSize.hero,
     fontWeight: '800',
     color: theme.colors.text,
     textAlign: 'center',
-    letterSpacing: 1,
+    letterSpacing: 2,
   },
   subtitle: {
     fontSize: theme.fontSize.lg,
@@ -70,31 +74,47 @@ const styles = StyleSheet.create({
     height: 3,
     backgroundColor: theme.colors.primary,
     borderRadius: 2,
-    marginVertical: theme.spacing.lg,
+    marginTop: theme.spacing.lg,
   },
-  description: {
-    fontSize: theme.fontSize.md,
-    color: theme.colors.textSecondary,
-    textAlign: 'center',
-    lineHeight: 24,
-    paddingHorizontal: theme.spacing.md,
+  buttonsContainer: {
+    width: '100%',
+    gap: theme.spacing.md,
   },
-  startButton: {
-    backgroundColor: theme.colors.primary,
-    paddingVertical: theme.spacing.md,
-    paddingHorizontal: theme.spacing.xxl + 20,
-    borderRadius: theme.borderRadius.xl,
-    elevation: 6,
-    shadowColor: theme.colors.primary,
-    shadowOffset: { width: 0, height: 4 },
+  modeButton: {
+    borderRadius: theme.borderRadius.lg,
+    paddingVertical: theme.spacing.xl,
+    paddingHorizontal: theme.spacing.lg,
+    alignItems: 'center',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.3,
-    shadowRadius: 8,
+    shadowRadius: 6,
   },
-  startButtonText: {
+  sprintButton: {
+    backgroundColor: theme.colors.surface,
+    borderWidth: 1,
+    borderColor: theme.colors.primary,
+  },
+  scrollButton: {
+    backgroundColor: theme.colors.surface,
+    borderWidth: 1,
+    borderColor: theme.colors.accent,
+  },
+  modeEmoji: {
+    fontSize: 36,
+    marginBottom: theme.spacing.sm,
+  },
+  modeTitle: {
     fontSize: theme.fontSize.xl,
     fontWeight: '700',
     color: theme.colors.text,
-    letterSpacing: 3,
+    letterSpacing: 1,
+  },
+  modeDesc: {
+    fontSize: theme.fontSize.sm,
+    color: theme.colors.textSecondary,
+    marginTop: theme.spacing.xs,
   },
   footer: {
     position: 'absolute',

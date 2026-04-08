@@ -7,25 +7,26 @@ import {
   StyleSheet,
   StatusBar,
   Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { theme } from '../theme';
-import { questions, isTextInput } from '../data/questions';
-
-type RootStackParamList = {
-  Home: undefined;
-  Game: undefined;
-  Result: { score: number };
-};
+import { RootStackParamList } from '../types';
+import { questions, isTextInput, getLetterHint } from '../data/questions';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Game'>;
 
-export default function GameScreen({ navigation }: Props) {
-  const [timeLeft, setTimeLeft] = useState(30);
+export default function GameScreen({ navigation, route }: Props) {
+  const duration = route.params.duration;
+  const [timeLeft, setTimeLeft] = useState(duration);
   const [score, setScore] = useState(0);
   const [questionIndex, setQuestionIndex] = useState(0);
   const [userInput, setUserInput] = useState('');
   const [feedback, setFeedback] = useState<'correct' | 'wrong' | null>(null);
+  const [hintText, setHintText] = useState<string | null>(null);
+  const [hintUsed, setHintUsed] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const feedbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const gameOverRef = useRef(false);
@@ -48,7 +49,6 @@ export default function GameScreen({ navigation }: Props) {
       setTimeLeft((prev) => {
         if (prev <= 1) {
           if (timerRef.current) clearInterval(timerRef.current);
-          // Use scoreRef for the latest score value
           setTimeout(() => navigateToResult(scoreRef.current), 0);
           return 0;
         }
@@ -81,8 +81,9 @@ export default function GameScreen({ navigation }: Props) {
     feedbackTimerRef.current = setTimeout(() => {
       if (gameOverRef.current) return;
       setFeedback(null);
+      setHintText(null);
+      setHintUsed(false);
       setQuestionIndex((prev) => prev + 1);
-      // Focus input for next text-input question
       setTimeout(() => inputRef.current?.focus(), 50);
     }, 300);
   }, [feedback, currentQuestion]);
@@ -93,20 +94,26 @@ export default function GameScreen({ navigation }: Props) {
     }
   }, [userInput, handleAnswer]);
 
+  const handleHint = useCallback(() => {
+    if (hintUsed || feedback !== null) return;
+    setHintUsed(true);
+
+    if (currentQuestion.type === 'riddle' && currentQuestion.hint) {
+      setHintText(`💡 ${currentQuestion.hint}`);
+    } else {
+      setHintText(`💡 ${getLetterHint(currentQuestion.answer)}`);
+    }
+  }, [hintUsed, feedback, currentQuestion]);
+
   const getQuestionLabel = () => {
     switch (currentQuestion.type) {
-      case 'unscramble':
-        return 'Unscramble the word:';
-      case 'wrong_letter':
-        return 'Fix the spelling:';
-      case 'missing_vowel':
-        return 'Fill in the vowels:';
-      case 'classifier':
-        return 'What part of speech?';
-      case 'grammar':
-        return 'Is this sentence correct?';
-      default:
-        return '';
+      case 'unscramble': return 'Unscramble the word:';
+      case 'wrong_letter': return 'Fix the spelling:';
+      case 'missing_vowel': return 'Fill in the vowels:';
+      case 'classifier': return 'What part of speech?';
+      case 'grammar': return 'Is this sentence correct?';
+      case 'riddle': return '🧩 Riddle:';
+      default: return '';
     }
   };
 
@@ -117,8 +124,14 @@ export default function GameScreen({ navigation }: Props) {
       ? theme.colors.accent
       : theme.colors.text;
 
+  const showHintButton = isTextInput(currentQuestion.type) && !hintUsed && feedback === null;
+
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+    >
       <StatusBar barStyle="light-content" backgroundColor={theme.colors.background} />
 
       {/* Header Row */}
@@ -127,68 +140,96 @@ export default function GameScreen({ navigation }: Props) {
           <Text style={styles.timerLabel}>⏱ TIME</Text>
           <Text style={[styles.timerValue, { color: timerColor }]}>{timeLeft}s</Text>
         </View>
+        <View style={styles.durationBadge}>
+          <Text style={styles.durationBadgeText}>{duration}s Sprint</Text>
+        </View>
         <View style={styles.scoreContainer}>
           <Text style={styles.scoreLabel}>🏆 SCORE</Text>
           <Text style={styles.scoreValue}>{score}</Text>
         </View>
       </View>
 
-      {/* Question Area */}
-      <View style={styles.questionArea}>
-        <Text style={styles.questionLabel}>{getQuestionLabel()}</Text>
-        <Text style={styles.questionText}>{currentQuestion.question}</Text>
-      </View>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+        bounces={false}
+      >
+        {/* Question Area */}
+        <View style={styles.questionArea}>
+          <Text style={styles.questionLabel}>{getQuestionLabel()}</Text>
+          <Text style={[styles.questionText, currentQuestion.type === 'riddle' && styles.riddleText]}>
+            {currentQuestion.question}
+          </Text>
 
-      {/* Answer Area */}
-      <View style={styles.answerArea}>
-        {isTextInput(currentQuestion.type) ? (
-          <View style={styles.inputContainer}>
-            <TextInput
-              ref={inputRef}
-              style={styles.textInput}
-              value={userInput}
-              onChangeText={setUserInput}
-              placeholder="Type your answer..."
-              placeholderTextColor={theme.colors.textSecondary}
-              autoCapitalize="characters"
-              autoCorrect={false}
-              onSubmitEditing={handleSubmit}
-              returnKeyType="done"
-              editable={feedback === null}
-            />
-            <TouchableOpacity
-              style={[
-                styles.submitButton,
-                userInput.trim().length === 0 && styles.submitButtonDisabled,
-              ]}
-              onPress={handleSubmit}
-              activeOpacity={0.7}
-              disabled={userInput.trim().length === 0 || feedback !== null}
-            >
-              <Text style={styles.submitButtonText}>SUBMIT</Text>
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <View style={styles.optionsContainer}>
-            {currentQuestion.options?.map((option, idx) => (
-              <TouchableOpacity
-                key={idx}
-                style={[
-                  styles.optionButton,
-                  currentQuestion.options!.length === 2
-                    ? styles.optionButtonWide
-                    : styles.optionButtonHalf,
-                ]}
-                onPress={() => handleAnswer(option)}
-                activeOpacity={0.7}
-                disabled={feedback !== null}
-              >
-                <Text style={styles.optionText}>{option}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        )}
-      </View>
+          {/* Inline Hint */}
+          {hintText && (
+            <Text style={styles.hintText}>{hintText}</Text>
+          )}
+        </View>
+
+        {/* Answer Area */}
+        <View style={styles.answerArea}>
+          {isTextInput(currentQuestion.type) ? (
+            <View style={styles.inputContainer}>
+              <TextInput
+                ref={inputRef}
+                style={styles.textInput}
+                value={userInput}
+                onChangeText={setUserInput}
+                placeholder="Type your answer..."
+                placeholderTextColor={theme.colors.textSecondary}
+                autoCapitalize="characters"
+                autoCorrect={false}
+                onSubmitEditing={handleSubmit}
+                returnKeyType="done"
+                editable={feedback === null}
+              />
+              <View style={styles.buttonRow}>
+                {showHintButton && (
+                  <TouchableOpacity
+                    style={styles.hintButton}
+                    onPress={handleHint}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={styles.hintButtonText}>💡 HINT</Text>
+                  </TouchableOpacity>
+                )}
+                <TouchableOpacity
+                  style={[
+                    styles.submitButton,
+                    showHintButton && styles.submitButtonWithHint,
+                    userInput.trim().length === 0 && styles.submitButtonDisabled,
+                  ]}
+                  onPress={handleSubmit}
+                  activeOpacity={0.7}
+                  disabled={userInput.trim().length === 0 || feedback !== null}
+                >
+                  <Text style={styles.submitButtonText}>SUBMIT</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          ) : (
+            <View style={styles.optionsContainer}>
+              {currentQuestion.options?.map((option, idx) => (
+                <TouchableOpacity
+                  key={idx}
+                  style={[
+                    styles.optionButton,
+                    currentQuestion.options!.length === 2
+                      ? styles.optionButtonWide
+                      : styles.optionButtonHalf,
+                  ]}
+                  onPress={() => handleAnswer(option)}
+                  activeOpacity={0.7}
+                  disabled={feedback !== null}
+                >
+                  <Text style={styles.optionText}>{option}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
+        </View>
+      </ScrollView>
 
       {/* Feedback */}
       {feedback !== null && (
@@ -203,7 +244,7 @@ export default function GameScreen({ navigation }: Props) {
           </Text>
         </View>
       )}
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -211,14 +252,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
-    paddingHorizontal: theme.spacing.lg,
     paddingTop: theme.spacing.xxl,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: theme.spacing.xl,
+    marginBottom: theme.spacing.md,
+    paddingHorizontal: theme.spacing.lg,
   },
   timerContainer: {
     alignItems: 'flex-start',
@@ -232,7 +273,17 @@ const styles = StyleSheet.create({
   timerValue: {
     fontSize: theme.fontSize.xxl,
     fontWeight: '800',
-    color: theme.colors.text,
+  },
+  durationBadge: {
+    backgroundColor: theme.colors.surfaceLight,
+    paddingHorizontal: theme.spacing.sm,
+    paddingVertical: theme.spacing.xs,
+    borderRadius: theme.borderRadius.sm,
+  },
+  durationBadgeText: {
+    fontSize: theme.fontSize.xs,
+    color: theme.colors.textSecondary,
+    fontWeight: '600',
   },
   scoreContainer: {
     alignItems: 'flex-end',
@@ -248,10 +299,15 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: theme.colors.primary,
   },
-  questionArea: {
-    flex: 1,
+  scrollContent: {
+    flexGrow: 1,
     justifyContent: 'center',
+    paddingHorizontal: theme.spacing.lg,
+    paddingBottom: theme.spacing.xxl,
+  },
+  questionArea: {
     alignItems: 'center',
+    marginBottom: theme.spacing.xl,
     paddingHorizontal: theme.spacing.md,
   },
   questionLabel: {
@@ -268,8 +324,23 @@ const styles = StyleSheet.create({
     letterSpacing: 2,
     lineHeight: 48,
   },
+  riddleText: {
+    fontSize: theme.fontSize.xl,
+    fontStyle: 'italic',
+    letterSpacing: 0.5,
+    lineHeight: 36,
+    color: theme.colors.highlight,
+  },
+  hintText: {
+    fontSize: theme.fontSize.lg,
+    color: theme.colors.accent,
+    fontWeight: '600',
+    marginTop: theme.spacing.md,
+    textAlign: 'center',
+    letterSpacing: 2,
+  },
   answerArea: {
-    paddingBottom: theme.spacing.xxl,
+    paddingBottom: theme.spacing.lg,
   },
   inputContainer: {
     gap: theme.spacing.md,
@@ -286,11 +357,34 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     letterSpacing: 2,
   },
+  buttonRow: {
+    flexDirection: 'row',
+    gap: theme.spacing.sm,
+  },
+  hintButton: {
+    backgroundColor: theme.colors.surfaceLight,
+    paddingVertical: theme.spacing.md,
+    borderRadius: theme.borderRadius.md,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: theme.colors.accent,
+    flex: 1,
+  },
+  hintButtonText: {
+    fontSize: theme.fontSize.md,
+    fontWeight: '700',
+    color: theme.colors.accent,
+    letterSpacing: 1,
+  },
   submitButton: {
     backgroundColor: theme.colors.primary,
     paddingVertical: theme.spacing.md,
     borderRadius: theme.borderRadius.md,
     alignItems: 'center',
+    flex: 1,
+  },
+  submitButtonWithHint: {
+    flex: 2,
   },
   submitButtonDisabled: {
     backgroundColor: theme.colors.surfaceLight,

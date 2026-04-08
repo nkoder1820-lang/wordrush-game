@@ -9,12 +9,7 @@ import {
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { theme } from '../theme';
-
-type RootStackParamList = {
-  Home: undefined;
-  Game: undefined;
-  Result: { score: number };
-};
+import { RootStackParamList } from '../types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Result'>;
 

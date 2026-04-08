@@ -2,7 +2,7 @@
   "expo": {
     "name": "WordRush",
     "slug": "wordrush",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
@@ -17,8 +17,9 @@
     },
     "android": {
       "package": "com.wordrush.game",
-      "versionCode": 1,
+      "versionCode": 3,
       "permissions": [],
+      "softInputMode": "adjustResize",
       "adaptiveIcon": {
         "backgroundColor": "#121212",
         "foregroundImage": "./assets/android-icon-foreground.png",
